@@ -1,0 +1,10 @@
+Add your own assets to this folder:
+
+- resume.pdf                    -> your downloadable resume (referenced in data/portfolio.ts)
+- me1.png, me2.png            -> your photos for the About section pop-in card
+                                    (me1 shows by default, me2 crossfades in on hover —
+                                    see components/AboutPhoto.tsx)
+- projects/project-1.jpg, project-2.jpg, project-3.jpg -> project screenshots
+  (wire them up in components/Projects.tsx using next/image)
+
+You can delete this file once you've added your own assets.

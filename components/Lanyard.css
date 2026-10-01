@@ -1,0 +1,82 @@
+.lanyard-wrapper {
+  position: relative;
+  z-index: 20;
+
+  width: 100%;
+  height: 100%;
+
+  min-height: 650px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: visible;
+
+  background: transparent;
+
+  touch-action: none;
+
+  user-select: none;
+
+  -webkit-user-select: none;
+
+  isolation: isolate;
+}
+
+/* =========================================
+   THREE.JS CANVAS
+========================================= */
+
+.lanyard-wrapper canvas {
+  display: block;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  background: transparent !important;
+
+  outline: none;
+
+  touch-action: none;
+
+  cursor: grab;
+}
+
+.lanyard-wrapper canvas:active {
+  cursor: grabbing;
+}
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 1024px) {
+  .lanyard-wrapper {
+    min-height: 600px;
+  }
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+  .lanyard-wrapper {
+    min-height: 520px;
+
+    height: 560px;
+  }
+}
+
+/* =========================================
+   SMALL MOBILE
+========================================= */
+
+@media (max-width: 480px) {
+  .lanyard-wrapper {
+    min-height: 480px;
+
+    height: 500px;
+  }
+}
