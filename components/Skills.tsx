@@ -28,7 +28,7 @@ export default function Skills() {
         <SectionHeading
           eyebrow="Skills"
           title="Tools of the trade"
-          description="A stack chosen for speed of iteration and long-term maintainability."
+          description=""
         />
       </div>
 

@@ -324,24 +324,12 @@ export default function Experience() {
                 delay: 0.12,
               }}
               className="
-                mt-2
-
-                font-display
-
-                text-3xl
-                font-black
-
-                uppercase
-
-                tracking-tight
-
-                text-white
-
-                drop-shadow-[0_0_22px_rgba(166,77,121,.15)]
-
-                sm:text-5xl
-
-                lg:text-6xl
+          font-pixel
+            text-lg
+            leading-relaxed
+            text-white
+            sm:text-xl
+            md:text-2xl
               "
             >
               My Journey

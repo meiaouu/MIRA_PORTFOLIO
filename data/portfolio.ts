@@ -58,34 +58,63 @@ export const skills = [
 
 export const projects = [
   {
-    title: "Project Alpha",
+    title: "UnitConverter",
     description:
-      "A real-time analytics dashboard with sub-100ms updates, built for a logistics platform tracking 10k+ shipments.",
-    tags: ["Next.js", "TypeScript", "PostgreSQL", "WebSockets"],
-    image: "/projects/project-1.jpg",
-    liveUrl: "https://example.com",
-    repoUrl: "https://github.com/yourusername/project-alpha",
+      "Responsive cross-platform unit conversion application.",
+    tags: [
+      "Ionic",
+      "Angular",
+      "TypeScript",
+    ],
+
+    image:
+      "/projects/unitconverter.png",
+
+    liveUrl:
+      "https://unit-converter2-0.vercel.app/launch",
+
+    repoUrl: "",
   },
+
   {
-    title: "Project Nova",
+    title:
+      "Duplica: AI-Powered Academic Document Analysis System",
     description:
-      "An e-commerce storefront with 3D product previews and a headless CMS, optimized to a 98 Lighthouse score.",
-    tags: ["React", "Three.js", "Tailwind CSS", "Stripe"],
-    image: "/projects/project-2.jpg",
-    liveUrl: "https://example.com",
-    repoUrl: "https://github.com/yourusername/project-nova",
+      "AI-powered document analysis platform.",
+    tags: [
+      "React",
+      "TypeScript",
+      "Python",
+    ],
+
+    image:
+      "/projects/duplica.png",
+
+    liveUrl: "",
+
+    repoUrl: "",
   },
+
   {
-    title: "Project Horizon",
+    title:
+      "DentaLink: Patient Records Management and Appointment Scheduling System",
     description:
-      "A collaborative writing tool with live cursors and offline-first sync, used by 3 remote content teams.",
-    tags: ["Next.js", "Node.js", "MongoDB", "CRDT"],
-    image: "/projects/project-3.jpg",
-    liveUrl: "https://example.com",
-    repoUrl: "https://github.com/yourusername/project-horizon",
+      "Dental clinic management system.",
+    tags: [
+      "PHP",
+      "Laravel",
+      "MySQL",
+    ],
+
+    image:
+      "/projects/dentalclinic.png",
+
+    liveUrl:
+      "http://dentalclinicproject.rf.gd/?i=1",
+
+    repoUrl: "",
   },
 ];
-
 export const experience = [
   {
     role: "Frontend Developer",
