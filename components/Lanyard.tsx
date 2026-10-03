@@ -54,7 +54,7 @@ const DEFAULT_LANYARD =
   "/lanyard/lanyard.png";
 
 /* =========================================================
-   MESHLINES
+   MESHLINE
 ========================================================= */
 
 extend({
@@ -70,7 +70,7 @@ declare module "@react-three/fiber" {
 }
 
 /* =========================================================
-   FALLBACK
+   FALLBACK IMAGE
 ========================================================= */
 
 const BLANK_PIXEL =
@@ -127,13 +127,10 @@ interface LanyardProps {
     | "cover"
     | "contain";
 
-  /* Resize PNG */
   imageZoom?: number;
 
-  /* Move PNG vertically */
   imageOffsetY?: number;
 
-  /* Darken/lighten PNG */
   imageBrightness?: number;
 
   lanyardImage?:
@@ -181,13 +178,21 @@ type LanyardRigidBody =
   };
 
 /* =========================================================
-   MAIN
+   MAIN LANYARD
 ========================================================= */
 
 export default function Lanyard({
-  position = [0, 0, 23],
+  position = [
+    0,
+    0,
+    23,
+  ],
 
-  gravity = [0, -40, 0],
+  gravity = [
+    0,
+    -40,
+    0,
+  ],
 
   fov = 20,
 
@@ -199,21 +204,11 @@ export default function Lanyard({
 
   imageFit = "cover",
 
-  /*
-   * Image size.
-   */
   imageZoom = 1.35,
 
-  /*
-   * Negative moves image upward.
-   */
   imageOffsetY = -0.12,
 
-  /*
-   * 1 = normal
-   * 0.7 = darker
-   */
-  imageBrightness = 0.7,
+  imageBrightness = 1,
 
   lanyardImage = null,
 
@@ -223,14 +218,15 @@ export default function Lanyard({
     screenWidth,
     setScreenWidth,
   ] = useState(
-    typeof window !== "undefined"
+    typeof window !==
+      "undefined"
       ? window.innerWidth
       : 1440
   );
 
-  /* =======================================================
+  /* =====================================================
      RESPONSIVE SCREEN WIDTH
-  ======================================================= */
+  ===================================================== */
 
   useEffect(() => {
     const resize = () => {
@@ -327,35 +323,27 @@ export default function Lanyard({
             screenWidth={
               screenWidth
             }
-
             frontImage={
               frontImage
             }
-
             backImage={
               backImage
             }
-
             imageFit={
               imageFit
             }
-
             imageZoom={
               imageZoom
             }
-
             imageOffsetY={
               imageOffsetY
             }
-
             imageBrightness={
               imageBrightness
             }
-
             lanyardImage={
               lanyardImage
             }
-
             lanyardWidth={
               lanyardWidth
             }
@@ -378,7 +366,8 @@ export default function Lanyard({
             rotation={[
               0,
               0,
-              Math.PI / 3,
+              Math.PI /
+                3,
             ]}
             scale={[
               100,
@@ -388,8 +377,8 @@ export default function Lanyard({
           />
 
           <Lightformer
-            intensity={3}
-            color="#d8b4fe"
+            intensity={2.2}
+            color="#d8d8df"
             position={[
               -1,
               -1,
@@ -398,7 +387,8 @@ export default function Lanyard({
             rotation={[
               0,
               0,
-              Math.PI / 3,
+              Math.PI /
+                3,
             ]}
             scale={[
               100,
@@ -408,8 +398,8 @@ export default function Lanyard({
           />
 
           <Lightformer
-            intensity={3}
-            color="#f0a6d2"
+            intensity={2.2}
+            color="#6f5a86"
             position={[
               1,
               1,
@@ -418,7 +408,8 @@ export default function Lanyard({
             rotation={[
               0,
               0,
-              Math.PI / 3,
+              Math.PI /
+                3,
             ]}
             scale={[
               100,
@@ -437,8 +428,10 @@ export default function Lanyard({
             ]}
             rotation={[
               0,
-              Math.PI / 2,
-              Math.PI / 3,
+              Math.PI /
+                2,
+              Math.PI /
+                3,
             ]}
             scale={[
               100,
@@ -473,7 +466,7 @@ function Band({
 
   imageOffsetY = -0.12,
 
-  imageBrightness = 0.7,
+  imageBrightness = 1,
 
   lanyardImage = null,
 
@@ -483,9 +476,18 @@ function Band({
     viewport,
   } = useThree();
 
-  /* =======================================================
-     RESPONSIVE POSITION / CARD SIZE
-  ======================================================= */
+  const isMobile =
+    screenWidth < 768;
+
+  /* =====================================================
+     POSITION / SIZE
+
+     x = move lanyard + ID left/right
+     y = move lanyard + ID up/down
+
+     Increase x = move right
+     Decrease x = move left
+  ===================================================== */
 
   const responsive =
     useMemo(() => {
@@ -496,21 +498,43 @@ function Band({
         480
       ) {
         return {
+          /*
+           * CHANGE THIS TO MOVE
+           * ROPE + ID TOGETHER
+           *
+           * 0.20 = slightly right
+           * 0.30 = right
+           * 0.40 = farther right
+           */
+
           x:
             viewport.width *
-            0.1,
+            0.30,
 
-          y: 4.75,
+          /*
+           * Increase = move up
+           * Decrease = move down
+           */
+
+          y: 4.7,
+
+          /*
+           * WHOLE ID SIZE
+           */
 
           cardScale:
-            1.4,
+            3,
+
+          /*
+           * STRAP THICKNESS
+           */
 
           ropeWidth:
-            0.7,
+            0.72,
         };
       }
 
-      /* PHONE */
+      /* LARGE PHONE */
 
       if (
         screenWidth <
@@ -519,15 +543,15 @@ function Band({
         return {
           x:
             viewport.width *
-            0.14,
+            0.28,
 
-          y: 4.75,
+          y: 4.7,
 
           cardScale:
-            1.6,
+            2.7,
 
           ropeWidth:
-            0.78,
+            0.8,
         };
       }
 
@@ -545,7 +569,7 @@ function Band({
           y: 4.75,
 
           cardScale:
-            1.9,
+            2.9,
 
           ropeWidth:
             0.88,
@@ -566,7 +590,7 @@ function Band({
           y: 4.75,
 
           cardScale:
-            2.25,
+            4.25,
 
           ropeWidth:
             0.98,
@@ -593,9 +617,9 @@ function Band({
       viewport.width,
     ]);
 
-  /* =======================================================
+  /* =====================================================
      REFERENCES
-  ======================================================= */
+  ===================================================== */
 
   const band =
     useRef<any>(
@@ -627,9 +651,9 @@ function Band({
       null!
     );
 
-  /* =======================================================
-     THREE VECTORS
-  ======================================================= */
+  /* =====================================================
+     VECTORS
+  ===================================================== */
 
   const vec =
     useMemo(
@@ -659,9 +683,9 @@ function Band({
       []
     );
 
-  /* =======================================================
-     RIGID BODY SETTINGS
-  ======================================================= */
+  /* =====================================================
+     PHYSICS SETTINGS
+  ===================================================== */
 
   const segmentProps:
     RigidBodyProps = {
@@ -674,16 +698,25 @@ function Band({
     colliders:
       false,
 
+    /*
+     * More damping on mobile
+     * prevents violent swinging.
+     */
+
     angularDamping:
-      4,
+      isMobile
+        ? 5.5
+        : 4,
 
     linearDamping:
-      4,
+      isMobile
+        ? 5
+        : 4,
   };
 
-  /* =======================================================
+  /* =====================================================
      MODEL
-  ======================================================= */
+  ===================================================== */
 
   const {
     nodes,
@@ -692,9 +725,9 @@ function Band({
     CARD_GLB
   ) as any;
 
-  /* =======================================================
+  /* =====================================================
      TEXTURES
-  ======================================================= */
+  ===================================================== */
 
   const texture =
     useTexture(
@@ -714,9 +747,9 @@ function Band({
         BLANK_PIXEL
     );
 
-  /* =======================================================
+  /* =====================================================
      CUSTOM ID TEXTURE
-  ======================================================= */
+  ===================================================== */
 
   const cardMap =
     useMemo(() => {
@@ -781,9 +814,7 @@ function Band({
         height
       );
 
-      /* ===================================================
-         DRAW CUSTOM PNG
-      =================================================== */
+      /* DRAW CUSTOM PNG */
 
       const drawFitted = (
         image: any,
@@ -818,8 +849,6 @@ function Band({
           rect.h *
           height;
 
-        /* BASE SCALE */
-
         const baseScale =
           imageFit ===
           "contain"
@@ -852,24 +881,15 @@ function Band({
           image.height *
           scale;
 
-        /* CENTER X */
-
         const dx =
           rx +
           (rw - dw) /
             2;
 
-        /* =================================================
-           Y POSITION
-
-           Negative imageOffsetY moves the PNG upward.
-
-           Example:
-           -0.05 slight up
-           -0.10 up
-           -0.15 more up
-           -0.20 very high
-        ================================================= */
+        /*
+         * Negative imageOffsetY
+         * moves image upward.
+         */
 
         const dy =
           ry +
@@ -879,8 +899,6 @@ function Band({
             imageOffsetY;
 
         ctx.save();
-
-        /* CLIP IMAGE TO CARD */
 
         ctx.beginPath();
 
@@ -893,10 +911,13 @@ function Band({
 
         ctx.clip();
 
-        /* BRIGHTNESS */
-
-        ctx.filter =
-          `brightness(${imageBrightness})`;
+        if (
+          imageBrightness !==
+          1
+        ) {
+          ctx.filter =
+            `brightness(${imageBrightness})`;
+        }
 
         ctx.drawImage(
           image,
@@ -936,8 +957,6 @@ function Band({
         );
       }
 
-      /* CREATE THREE TEXTURE */
-
       const result =
         new THREE.CanvasTexture(
           canvas
@@ -976,9 +995,9 @@ function Band({
       backTex,
     ]);
 
-  /* =======================================================
+  /* =====================================================
      ROPE CURVE
-  ======================================================= */
+  ===================================================== */
 
   const [
     curve,
@@ -987,8 +1006,11 @@ function Band({
       new THREE.CatmullRomCurve3(
         [
           new THREE.Vector3(),
+
           new THREE.Vector3(),
+
           new THREE.Vector3(),
+
           new THREE.Vector3(),
         ]
       )
@@ -997,9 +1019,9 @@ function Band({
   curve.curveType =
     "centripetal";
 
-  /* =======================================================
-     DRAGGING
-  ======================================================= */
+  /* =====================================================
+     DRAG STATE
+  ===================================================== */
 
   const [
     dragged,
@@ -1016,17 +1038,81 @@ function Band({
   ] =
     useState(false);
 
-  /* =======================================================
+  /* =====================================================
+     REAL ROPE LENGTH
+
+     THIS CONTROLS THE ACTUAL PHYSICAL LENGTH.
+
+     Mobile:
+     1.0 = short
+     1.2 = medium
+     1.35 = longer
+     1.5 = very long
+
+     Change 1.35 if you want.
+  ===================================================== */
+
+  const ropeLength =
+    isMobile
+      ? 1.35
+      : 1;
+
+  /*
+   * Distance between last rope
+   * point and card.
+   */
+
+  const cardAttachY =
+    isMobile
+      ? 1.8
+      : 1.45;
+
+  /* =====================================================
+     INITIAL POSITIONS
+
+     These automatically match ropeLength,
+     so you do NOT need values like -8.9.
+  ===================================================== */
+
+  const j1Y =
+    -ropeLength;
+
+  const j2Y =
+    -(ropeLength *
+      2);
+
+  const j3Y =
+    -(ropeLength *
+      3);
+
+  const cardY =
+    -(
+      ropeLength *
+        3 +
+      cardAttachY
+    );
+
+  /* =====================================================
      PHYSICS JOINTS
-  ======================================================= */
+  ===================================================== */
 
   useRopeJoint(
     fixed,
     j1,
     [
-      [0, 0, 0],
-      [0, 0, 0],
-      1,
+      [
+        0,
+        0,
+        0,
+      ],
+
+      [
+        0,
+        0,
+        0,
+      ],
+
+      ropeLength,
     ]
   );
 
@@ -1034,9 +1120,19 @@ function Band({
     j1,
     j2,
     [
-      [0, 0, 0],
-      [0, 0, 0],
-      1,
+      [
+        0,
+        0,
+        0,
+      ],
+
+      [
+        0,
+        0,
+        0,
+      ],
+
+      ropeLength,
     ]
   );
 
@@ -1044,9 +1140,19 @@ function Band({
     j2,
     j3,
     [
-      [0, 0, 0],
-      [0, 0, 0],
-      1,
+      [
+        0,
+        0,
+        0,
+      ],
+
+      [
+        0,
+        0,
+        0,
+      ],
+
+      ropeLength,
     ]
   );
 
@@ -1054,19 +1160,23 @@ function Band({
     j3,
     card,
     [
-      [0, 0, 0],
+      [
+        0,
+        0,
+        0,
+      ],
 
       [
         0,
-        1.45,
+        cardAttachY,
         0,
       ],
     ]
   );
 
-  /* =======================================================
+  /* =====================================================
      CURSOR
-  ======================================================= */
+  ===================================================== */
 
   useEffect(() => {
     if (hovered) {
@@ -1088,9 +1198,9 @@ function Band({
     dragged,
   ]);
 
-  /* =======================================================
+  /* =====================================================
      LERP
-  ======================================================= */
+  ===================================================== */
 
   const getLerped = (
     body:
@@ -1108,9 +1218,9 @@ function Band({
     return body.lerped;
   };
 
-  /* =======================================================
-     FRAME ANIMATION
-  ======================================================= */
+  /* =====================================================
+     FRAME
+  ===================================================== */
 
   useFrame(
     (
@@ -1126,8 +1236,12 @@ function Band({
       ) {
         vec
           .set(
-            state.pointer.x,
-            state.pointer.y,
+            state.pointer
+              .x,
+
+            state.pointer
+              .y,
+
             0.5
           )
           .unproject(
@@ -1157,7 +1271,9 @@ function Band({
           j3,
           fixed,
         ].forEach(
-          (ref) => {
+          (
+            ref
+          ) => {
             ref.current?.wakeUp();
           }
         );
@@ -1192,7 +1308,9 @@ function Band({
           j1,
           j2,
         ].forEach(
-          (ref) => {
+          (
+            ref
+          ) => {
             const body =
               ref.current;
 
@@ -1260,14 +1378,16 @@ function Band({
           fixed.current.translation()
         );
 
-        band.current?.geometry?.setPoints(
-          curve.getPoints(
-            screenWidth <
-              768
-              ? 32
-              : 56
-          )
-        );
+        band.current
+          ?.geometry
+          ?.setPoints(
+            curve.getPoints(
+              screenWidth <
+                768
+                ? 32
+                : 56
+            )
+          );
 
         /* CARD ROTATION */
 
@@ -1299,9 +1419,9 @@ function Band({
     }
   );
 
-  /* =======================================================
+  /* =====================================================
      LANYARD TEXTURE
-  ======================================================= */
+  ===================================================== */
 
   texture.wrapS =
     THREE.RepeatWrapping;
@@ -1315,13 +1435,21 @@ function Band({
   texture.needsUpdate =
     true;
 
-  /* =======================================================
+  /* =====================================================
      RENDER
-  ======================================================= */
+  ===================================================== */
 
   return (
     <>
-      {/* LANYARD GROUP */}
+      {/* =================================================
+          PARENT GROUP
+
+          IMPORTANT:
+          Everything physical is inside this group.
+
+          responsive.x = move ALL left/right
+          responsive.y = move ALL up/down
+      ================================================= */}
 
       <group
         position={[
@@ -1333,19 +1461,23 @@ function Band({
         {/* FIXED TOP */}
 
         <RigidBody
-          ref={fixed}
+          ref={
+            fixed
+          }
           {...segmentProps}
           type="fixed"
         />
 
-        {/* ROPE 1 */}
+        {/* ROPE POINT 1 */}
 
         <RigidBody
-          ref={j1}
+          ref={
+            j1
+          }
           {...segmentProps}
           position={[
             0,
-            -1,
+            j1Y,
             0,
           ]}
         >
@@ -1356,14 +1488,16 @@ function Band({
           />
         </RigidBody>
 
-        {/* ROPE 2 */}
+        {/* ROPE POINT 2 */}
 
         <RigidBody
-          ref={j2}
+          ref={
+            j2
+          }
           {...segmentProps}
           position={[
             0,
-            -2,
+            j2Y,
             0,
           ]}
         >
@@ -1374,14 +1508,16 @@ function Band({
           />
         </RigidBody>
 
-        {/* ROPE 3 */}
+        {/* ROPE POINT 3 */}
 
         <RigidBody
-          ref={j3}
+          ref={
+            j3
+          }
           {...segmentProps}
           position={[
             0,
-            -3,
+            j3Y,
             0,
           ]}
         >
@@ -1397,11 +1533,13 @@ function Band({
         ================================================= */}
 
         <RigidBody
-          ref={card}
+          ref={
+            card
+          }
           {...segmentProps}
           position={[
             0,
-            -4.45,
+            cardY,
             0,
           ]}
           type={
@@ -1422,13 +1560,11 @@ function Band({
             scale={
               responsive.cardScale
             }
-
             position={[
               0,
               -1.2,
               -0.05,
             ]}
-
             onPointerOver={(
               e
             ) => {
@@ -1438,13 +1574,11 @@ function Band({
                 true
               );
             }}
-
             onPointerOut={() => {
               setHovered(
                 false
               );
             }}
-
             onPointerDown={(
               e:
                 ThreeEvent<PointerEvent>
@@ -1469,7 +1603,6 @@ function Band({
                   )
               );
             }}
-
             onPointerUp={(
               e:
                 ThreeEvent<PointerEvent>
@@ -1501,22 +1634,18 @@ function Band({
                   materials.base
                     ?.map
                 }
-
                 clearcoat={
                   screenWidth <
                   768
                     ? 0.25
                     : 0.65
                 }
-
                 clearcoatRoughness={
                   0.2
                 }
-
                 roughness={
                   0.82
                 }
-
                 metalness={
                   0.15
                 }
@@ -1551,21 +1680,21 @@ function Band({
       </group>
 
       {/* =================================================
-          LANYARD STRAP
+          VISUAL LANYARD STRAP
       ================================================= */}
 
       <mesh
-        ref={band}
+        ref={
+          band
+        }
       >
         <meshLineGeometry />
 
         <meshLineMaterial
           color="white"
-
           depthTest={
             false
           }
-
           resolution={[
             Math.max(
               screenWidth,
@@ -1581,18 +1710,14 @@ function Band({
               1
             ),
           ]}
-
           useMap
-
           map={
             texture
           }
-
           repeat={[
             -4,
             1,
           ]}
-
           lineWidth={
             lanyardWidth *
             responsive.ropeWidth

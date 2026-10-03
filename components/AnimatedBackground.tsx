@@ -212,13 +212,13 @@ export default function AnimatedBackground({
       `}
     >
       {/* ========================================================
-          DARK PURPLE BASE
+          BLACK BASE
       ======================================================== */}
 
-      <div className="absolute inset-0 bg-[#08050f]" />
+      <div className="absolute inset-0 bg-[#050506]" />
 
       {/* ========================================================
-          LARGE PURPLE ATMOSPHERIC GLOW
+          DARK VIOLET ATMOSPHERIC GLOW
       ======================================================== */}
 
       <div
@@ -231,14 +231,14 @@ export default function AnimatedBackground({
           -translate-x-1/2
           -translate-y-1/2
           rounded-full
-          bg-violet-700/[0.045]
+          bg-[#3b2558]/[0.055]
           blur-[180px]
           animate-purple-breathe
         "
       />
 
       {/* ========================================================
-          SECONDARY PURPLE GLOW
+          SOFT WHITE / VIOLET GLOW
       ======================================================== */}
 
       <div
@@ -249,7 +249,7 @@ export default function AnimatedBackground({
           h-[450px]
           w-[450px]
           rounded-full
-          bg-fuchsia-700/[0.025]
+          bg-white/[0.012]
           blur-[150px]
           animate-purple-orbit
         "
@@ -389,7 +389,7 @@ export default function AnimatedBackground({
             absolute
             font-mono
             font-semibold
-            text-violet-300
+            text-white/35
           "
           style={
             {
@@ -444,10 +444,10 @@ export default function AnimatedBackground({
               overflow-hidden
               rounded-xl
               border
-              border-violet-400/15
-              bg-purple-950/10
+              border-white/[0.08]
+              bg-black/20
               backdrop-blur-sm
-              shadow-[0_0_25px_rgba(124,58,237,0.05)]
+              shadow-[0_0_25px_rgba(59,37,88,0.08)]
             "
           >
             <Image
@@ -466,9 +466,9 @@ export default function AnimatedBackground({
                 absolute
                 inset-0
                 bg-gradient-to-br
-                from-violet-400/10
+                from-white/[0.035]
                 via-transparent
-                to-fuchsia-500/10
+                to-[#3b2558]/10
               "
             />
 
@@ -478,20 +478,20 @@ export default function AnimatedBackground({
                 inset-x-0
                 top-0
                 h-px
-                bg-violet-300/30
+                bg-white/20
                 scan-line
               "
             />
 
             {/* Corner markers */}
 
-            <div className="absolute left-1 top-1 h-2 w-2 border-l border-t border-violet-300/30" />
+            <div className="absolute left-1 top-1 h-2 w-2 border-l border-t border-white/20" />
 
-            <div className="absolute right-1 top-1 h-2 w-2 border-r border-t border-violet-300/30" />
+            <div className="absolute right-1 top-1 h-2 w-2 border-r border-t border-white/20" />
 
-            <div className="absolute bottom-1 left-1 h-2 w-2 border-b border-l border-violet-300/30" />
+            <div className="absolute bottom-1 left-1 h-2 w-2 border-b border-l border-white/20" />
 
-            <div className="absolute bottom-1 right-1 h-2 w-2 border-b border-r border-violet-300/30" />
+            <div className="absolute bottom-1 right-1 h-2 w-2 border-b border-r border-white/20" />
           </div>
         </div>
       ))}
@@ -503,7 +503,7 @@ export default function AnimatedBackground({
       <style jsx>{`
 
         /* ========================================================
-           PURPLE ATMOSPHERE
+           BLACK / WHITE / DARK VIOLET ATMOSPHERE
         ======================================================== */
 
         @keyframes purpleBreathe {
@@ -570,14 +570,14 @@ export default function AnimatedBackground({
         .ambient-light-one {
           left: -180px;
           top: 40%;
-          background: rgba(76, 29, 149, 0.035);
+          background: rgba(33, 21, 47, 0.05);
           animation: ambientOne 18s ease-in-out infinite;
         }
 
         .ambient-light-two {
           right: -180px;
           top: 10%;
-          background: rgba(126, 34, 206, 0.025);
+          background: rgba(59, 37, 88, 0.035);
           animation: ambientTwo 21s ease-in-out infinite;
         }
 
@@ -610,13 +610,13 @@ export default function AnimatedBackground({
         .futuristic-grid {
           background-image:
             linear-gradient(
-              rgba(139, 92, 246, 0.025)
+              rgba(81, 53, 116, 0.022)
               1px,
               transparent 1px
             ),
             linear-gradient(
               90deg,
-              rgba(139, 92, 246, 0.025)
+              rgba(81, 53, 116, 0.022)
               1px,
               transparent 1px
             );
@@ -698,8 +698,8 @@ export default function AnimatedBackground({
           background:
             radial-gradient(
               ellipse,
-              rgba(124, 58, 237, 0.08) 0%,
-              rgba(91, 33, 182, 0.04) 35%,
+              rgba(59, 37, 88, 0.09) 0%,
+              rgba(49, 31, 73, 0.05) 35%,
               rgba(0, 0, 0, 0) 72%
             );
 
@@ -750,8 +750,8 @@ export default function AnimatedBackground({
           background:
             radial-gradient(
               ellipse,
-              rgba(124, 58, 237, 0.13) 0%,
-              rgba(76, 29, 149, 0.07) 35%,
+              rgba(59, 37, 88, 0.14) 0%,
+              rgba(33, 21, 47, 0.08) 35%,
               transparent 70%
             );
 
@@ -802,8 +802,8 @@ export default function AnimatedBackground({
               ellipse,
               transparent 37%,
               rgba(255, 255, 255, 0.025) 42%,
-              rgba(196, 181, 253, 0.08) 48%,
-              rgba(124, 58, 237, 0.055) 55%,
+              rgba(210, 210, 220, 0.07) 48%,
+              rgba(59, 37, 88, 0.07) 55%,
               transparent 70%
             );
 
@@ -854,8 +854,8 @@ export default function AnimatedBackground({
             radial-gradient(
               ellipse,
               transparent 25%,
-              rgba(109, 40, 217, 0.12) 35%,
-              rgba(124, 58, 237, 0.16) 50%,
+              rgba(59, 37, 88, 0.12) 35%,
+              rgba(59, 37, 88, 0.17) 50%,
               transparent 75%
             );
 
@@ -877,7 +877,7 @@ export default function AnimatedBackground({
 
           border:
             2px solid
-            rgba(167, 139, 250, 0.1);
+            rgba(117, 82, 158, 0.10);
         }
 
         @keyframes backDiskSpin {
@@ -924,17 +924,17 @@ export default function AnimatedBackground({
 
               rgba(255, 255, 255, 0.025) 20%,
 
-              rgba(221, 214, 254, 0.1) 27%,
+              rgba(245, 245, 248, 0.08) 27%,
 
-              rgba(196, 181, 253, 0.2) 34%,
+              rgba(210, 210, 220, 0.17) 34%,
 
-              rgba(139, 92, 246, 0.28) 41%,
+              rgba(81, 53, 116, 0.24) 41%,
 
-              rgba(124, 58, 237, 0.2) 48%,
+              rgba(59, 37, 88, 0.20) 48%,
 
-              rgba(91, 33, 182, 0.12) 57%,
+              rgba(49, 31, 73, 0.12) 57%,
 
-              rgba(76, 29, 149, 0.06) 65%,
+              rgba(33, 21, 47, 0.07) 65%,
 
               transparent 78%
             );
@@ -990,11 +990,11 @@ export default function AnimatedBackground({
             conic-gradient(
               from 0deg,
               transparent,
-              rgba(139, 92, 246, 0.1),
-              rgba(221, 214, 254, 0.22),
-              rgba(124, 58, 237, 0.1),
+              rgba(81, 53, 116, 0.10),
+              rgba(245, 245, 248, 0.18),
+              rgba(59, 37, 88, 0.11),
               transparent,
-              rgba(167, 139, 250, 0.14),
+              rgba(117, 82, 158, 0.14),
               transparent
             );
 
@@ -1045,11 +1045,11 @@ export default function AnimatedBackground({
 
           border:
             2px solid
-            rgba(124, 58, 237, 0.14);
+            rgba(59, 37, 88, 0.15);
 
           box-shadow:
             0 0 25px
-            rgba(124, 58, 237, 0.08);
+            rgba(59, 37, 88, 0.09);
 
           animation:
             ringOuter
@@ -1064,7 +1064,7 @@ export default function AnimatedBackground({
 
           border:
             2px solid
-            rgba(196, 181, 253, 0.15);
+            rgba(210, 210, 220, 0.13);
 
           filter: blur(1px);
 
@@ -1177,8 +1177,8 @@ export default function AnimatedBackground({
             radial-gradient(
               ellipse,
               rgba(255, 255, 255, 0.32),
-              rgba(196, 181, 253, 0.18) 25%,
-              rgba(124, 58, 237, 0.08) 50%,
+              rgba(210, 210, 220, 0.15) 25%,
+              rgba(59, 37, 88, 0.09) 50%,
               transparent 72%
             );
 
@@ -1343,8 +1343,8 @@ export default function AnimatedBackground({
               90deg,
               transparent,
               rgba(255, 255, 255, 0.45),
-              rgba(196, 181, 253, 0.55),
-              rgba(124, 58, 237, 0.25),
+              rgba(225, 225, 232, 0.42),
+              rgba(59, 37, 88, 0.23),
               transparent
             );
 
@@ -1549,9 +1549,9 @@ export default function AnimatedBackground({
               ellipse at center bottom,
               transparent 25%,
               rgba(255, 255, 255, 0.08) 34%,
-              rgba(221, 214, 254, 0.18) 42%,
-              rgba(167, 139, 250, 0.18) 49%,
-              rgba(124, 58, 237, 0.07) 60%,
+              rgba(245, 245, 248, 0.14) 42%,
+              rgba(117, 82, 158, 0.17) 49%,
+              rgba(59, 37, 88, 0.08) 60%,
               transparent 72%
             );
 
@@ -1604,7 +1604,7 @@ export default function AnimatedBackground({
               circle,
               #000 0%,
               #000 58%,
-              #020104 68%,
+              #030304 68%,
               rgba(7, 3, 14, 0.98) 74%,
               transparent 79%
             );
@@ -1617,7 +1617,7 @@ export default function AnimatedBackground({
             rgba(0, 0, 0, 0.95),
 
             0 0 100px
-            rgba(76, 29, 149, 0.12);
+            rgba(33, 21, 47, 0.12);
 
           z-index: 20;
 
@@ -1658,7 +1658,7 @@ export default function AnimatedBackground({
               circle,
               #000 0%,
               #000 78%,
-              #020104 100%
+              #030304 100%
             );
 
           box-shadow:
@@ -1726,14 +1726,14 @@ export default function AnimatedBackground({
 
           border:
             2px solid
-            rgba(221, 214, 254, 0.22);
+            rgba(245, 245, 248, 0.18);
 
           box-shadow:
             0 0 8px
-            rgba(221, 214, 254, 0.16),
+            rgba(245, 245, 248, 0.12),
 
             0 0 25px
-            rgba(139, 92, 246, 0.13);
+            rgba(81, 53, 116, 0.13);
 
           animation:
             photonOne
@@ -1748,7 +1748,7 @@ export default function AnimatedBackground({
 
           border:
             1px solid
-            rgba(139, 92, 246, 0.12);
+            rgba(81, 53, 116, 0.12);
 
           filter: blur(3px);
 
@@ -1822,10 +1822,10 @@ export default function AnimatedBackground({
 
           box-shadow:
             0 0 12px
-            rgba(221, 214, 254, 0.16),
+            rgba(245, 245, 248, 0.12),
 
             0 0 30px
-            rgba(124, 58, 237, 0.13);
+            rgba(59, 37, 88, 0.14);
 
           filter: blur(1px);
 
@@ -1884,8 +1884,8 @@ export default function AnimatedBackground({
             radial-gradient(
               ellipse at center top,
               transparent 25%,
-              rgba(167, 139, 250, 0.12) 38%,
-              rgba(124, 58, 237, 0.08) 50%,
+              rgba(117, 82, 158, 0.12) 38%,
+              rgba(59, 37, 88, 0.09) 50%,
               transparent 72%
             );
 
@@ -1933,7 +1933,7 @@ export default function AnimatedBackground({
             linear-gradient(
               90deg,
               transparent,
-              rgba(221, 214, 254, 0.25),
+              rgba(245, 245, 248, 0.20),
               transparent
             );
 
@@ -2050,7 +2050,7 @@ export default function AnimatedBackground({
 
           text-shadow:
             0 0 12px
-            rgba(139, 92, 246, 0.15);
+            rgba(81, 53, 116, 0.15);
         }
 
         @keyframes futuristicFloat {

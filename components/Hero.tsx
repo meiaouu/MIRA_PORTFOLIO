@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+
 import {
   motion,
   useMotionValue,
@@ -16,6 +17,7 @@ import {
 } from "react-icons/fi";
 
 import { profile } from "@/data/portfolio";
+
 import TypingText from "./TypingText";
 import HangingIDCard from "./HangingIDCard";
 
@@ -34,22 +36,16 @@ export default function Hero() {
     useMotionValue(0);
 
   const springX =
-    useSpring(
-      mouseX,
-      {
-        stiffness: 120,
-        damping: 20,
-      }
-    );
+    useSpring(mouseX, {
+      stiffness: 120,
+      damping: 20,
+    });
 
   const springY =
-    useSpring(
-      mouseY,
-      {
-        stiffness: 120,
-        damping: 20,
-      }
-    );
+    useSpring(mouseY, {
+      stiffness: 120,
+      damping: 20,
+    });
 
   const rotateX =
     useTransform(
@@ -96,8 +92,8 @@ export default function Hero() {
       mouseY.set(0);
     };
 
-  const letters =
-    profile.name.split("");
+  const nameWords =
+    profile.name.split(" ");
 
   return (
     <section
@@ -113,59 +109,101 @@ export default function Hero() {
       }
       className="
         relative
+
         flex
-        min-h-screen
+        min-h-[100svh]
         w-full
-        flex-col
+
         items-center
         justify-center
+
         overflow-hidden
-        px-6
+
+        px-5
+        pb-24
         pt-24
+
         text-center
+
+        sm:px-6
+
+        md:min-h-screen
+        md:pb-20
+        md:pt-24
       "
     >
       {/* =====================================================
-          ID / LANYARD
+          SUBTLE DARK VIOLET GLOW
+      ===================================================== */}
 
-          This stays BEHIND the Hero content.
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+
+          absolute
+
+          left-1/2
+          top-[38%]
+
+          z-0
+
+          h-[440px]
+          w-[440px]
+
+          -translate-x-1/2
+
+          rounded-full
+
+          bg-[#3b2558]/[0.035]
+
+          blur-[150px]
+
+          md:h-[650px]
+          md:w-[650px]
+        "
+      />
+
+      {/* =====================================================
+          LANYARD
       ===================================================== */}
 
       <div
         className="
           absolute
           inset-0
-          z-0
+          z-[1]
         "
       >
         <HangingIDCard />
       </div>
 
       {/* =====================================================
-          HERO CONTENT
-
-          z-20 keeps everything above the ID.
-
-          pointer-events-none allows desktop lanyard dragging
-          through empty spaces.
-
-          Individual links/buttons turn pointer events back on.
+          CONTENT
       ===================================================== */}
 
       <div
         className="
           pointer-events-none
+
           relative
           z-20
+
           flex
           w-full
+          max-w-6xl
+
           flex-col
           items-center
           justify-center
         "
       >
         {/* =================================================
-            NAME
+            MOBILE NAME
+
+            Always:
+            Marjorie
+            Pulmones
         ================================================= */}
 
         <motion.div
@@ -177,22 +215,30 @@ export default function Hero() {
           }}
           className="
             mx-auto
+
             flex
-            flex-wrap
+            w-full
+
+            flex-col
+            items-center
             justify-center
+
+            gap-y-2
+
+            md:hidden
           "
         >
-          {letters.map(
+          {nameWords.map(
             (
-              letter,
-              i
+              word,
+              wordIndex
             ) => (
               <motion.span
                 key={
-                  i
+                  wordIndex
                 }
                 initial={{
-                  y: 160,
+                  y: 70,
                   opacity:
                     0,
                 }}
@@ -203,12 +249,12 @@ export default function Hero() {
                 }}
                 transition={{
                   duration:
-                    1,
+                    0.9,
 
                   delay:
-                    0.4 +
-                    i *
-                      0.05,
+                    0.35 +
+                    wordIndex *
+                      0.12,
 
                   ease: [
                     0.16,
@@ -218,41 +264,120 @@ export default function Hero() {
                   ],
                 }}
                 className="
-                  inline-block
+                  whitespace-nowrap
+
+                  font-pixel
+
+                  text-[22px]
+
+                  leading-[1.35]
+
+                  text-white
+
+                  drop-shadow-[0_0_12px_rgba(255,255,255,0.14)]
+
+                  sm:text-3xl
                 "
               >
-                <span
-                  className="
-                    inline-block
-                    animate-float
-                    font-pixel
-                    text-3xl
-                    text-white
-                    drop-shadow-[0_0_12px_rgba(166,77,121,0.6)]
-
-                    sm:text-4xl
-
-                    md:text-5xl
-                  "
-                  style={{
-                    animationDelay:
-                      `${i * 0.15}s`,
-
-                    whiteSpace:
-                      letter ===
-                      " "
-                        ? "pre"
-                        : "normal",
-                  }}
-                >
-                  {
-                    letter
-                  }
-                </span>
+                {
+                  word
+                }
               </motion.span>
             )
           )}
         </motion.div>
+
+        {/* =================================================
+            DESKTOP NAME
+
+            One line only.
+            No flex-wrap.
+            No per-letter layout.
+        ================================================= */}
+
+        <motion.h1
+          style={{
+            rotateX,
+            rotateY,
+            perspective:
+              800,
+          }}
+          initial={{
+            y: 70,
+            opacity: 0,
+          }}
+          animate={{
+            y: 0,
+            opacity: 1,
+          }}
+          transition={{
+            duration:
+              1,
+
+            delay:
+              0.4,
+
+            ease: [
+              0.16,
+              1,
+              0.3,
+              1,
+            ],
+          }}
+          className="
+            hidden
+
+            whitespace-nowrap
+
+            font-pixel
+
+            leading-none
+
+            text-white
+
+            drop-shadow-[0_0_14px_rgba(255,255,255,0.14)]
+
+            md:block
+            md:text-[4px]
+lg:text-[1px]
+xl:text-[40px]
+          "
+        >
+          {
+            profile.name
+          }
+        </motion.h1>
+
+        {/* =================================================
+            MOBILE DIVIDER
+        ================================================= */}
+
+        <motion.div
+          initial={{
+            width: 0,
+            opacity: 0,
+          }}
+          animate={{
+            width: 74,
+            opacity: 1,
+          }}
+          transition={{
+            delay: 1,
+            duration: 0.7,
+          }}
+          className="
+            mt-5
+
+            h-px
+
+            bg-gradient-to-r
+            from-transparent
+            via-white/45
+            to-transparent
+
+            md:hidden
+          "
+        />
 
         {/* =================================================
             ROLE
@@ -274,12 +399,22 @@ export default function Hero() {
               1.2,
           }}
           className="
-            mt-8
-            font-mono
-            text-lg
-            text-mauve
+            mt-5
 
-            sm:text-xl
+            min-h-[28px]
+
+            font-mono
+
+            text-sm
+
+            text-[#c9c7cf]
+
+            sm:text-base
+
+            md:mt-8
+            md:text-lg
+
+            lg:text-xl
           "
         >
           <TypingText
@@ -310,12 +445,25 @@ export default function Hero() {
           }}
           className="
             mx-auto
-            mt-6
-            max-w-xl
-            text-base
-            text-white/60
 
-            sm:text-lg
+            mt-4
+
+            max-w-[360px]
+
+            text-[13px]
+            leading-6
+
+            text-white/50
+
+            sm:max-w-md
+            sm:text-sm
+
+            md:mt-6
+            md:max-w-xl
+            md:text-base
+            md:leading-relaxed
+
+            lg:text-lg
           "
         >
           {
@@ -345,50 +493,140 @@ export default function Hero() {
           className="
             pointer-events-auto
 
-            mt-10
+            mt-7
+
             flex
-            flex-wrap
+            w-full
+            max-w-[320px]
+
+            flex-col
             items-center
             justify-center
-            gap-4
+
+            gap-3
+
+            sm:max-w-none
+            sm:flex-row
+
+            md:mt-9
+            md:gap-4
           "
         >
           <a
             href="#projects"
             className="
-              rounded-sm
-              bg-mauve
+              group
+
+              relative
+
+              flex
+              w-full
+
+              items-center
+              justify-center
+
+              overflow-hidden
+
+              rounded-lg
+
+              bg-white
+
               px-7
-              py-3
+              py-3.5
+
               text-sm
               font-semibold
-              text-white
-              shadow-[0_0_30px_-5px_rgba(166,77,121,0.6)]
-              transition-transform
 
-              hover:scale-105
-              hover:bg-glow
-              hover:text-onyx
+              text-black
+
+              shadow-[0_12px_34px_-14px_rgba(255,255,255,0.30)]
+
+              transition-all
+              duration-300
+
+              active:scale-[0.98]
+
+              hover:scale-[1.03]
+              hover:bg-[#3b2558]
+              hover:text-white
+
+              sm:w-auto
+              sm:rounded-sm
+              sm:py-3
             "
           >
-            View my work
+            <span
+              className="
+                relative
+                z-10
+              "
+            >
+              View my work
+            </span>
+
+            <span
+              className="
+                pointer-events-none
+
+                absolute
+                -left-12
+                top-0
+
+                h-full
+                w-10
+
+                -skew-x-12
+
+                bg-white/25
+
+                blur-sm
+
+                transition-transform
+                duration-700
+
+                group-hover:translate-x-[360px]
+              "
+            />
           </a>
 
           <a
             href="#contact"
             className="
-              rounded-sm
+              flex
+              w-full
+
+              items-center
+              justify-center
+
+              rounded-lg
+
               border
               border-white/15
+
+              bg-black/20
+
               px-7
-              py-3
+              py-3.5
+
               text-sm
               font-semibold
-              text-white/80
-              transition-colors
 
-              hover:border-mauve/60
+              text-white/75
+
+              backdrop-blur-md
+
+              transition-all
+              duration-300
+
+              active:scale-[0.98]
+
+              hover:border-white/40
+              hover:bg-white/[0.06]
               hover:text-white
+
+              sm:w-auto
+              sm:rounded-sm
+              sm:py-3
             "
           >
             Get in touch
@@ -402,9 +640,11 @@ export default function Hero() {
         <motion.div
           initial={{
             opacity: 0,
+            y: 8,
           }}
           animate={{
             opacity: 1,
+            y: 0,
           }}
           transition={{
             duration:
@@ -415,13 +655,20 @@ export default function Hero() {
           className="
             pointer-events-auto
 
-            mt-10
+            mt-7
+
             flex
             items-center
             justify-center
-            gap-5
-            text-xl
-            text-white/50
+
+            gap-2
+
+            text-lg
+            text-white/45
+
+            md:mt-9
+            md:gap-5
+            md:text-xl
           "
         >
           <a
@@ -434,8 +681,30 @@ export default function Hero() {
             rel="noopener noreferrer"
             aria-label="GitHub"
             className="
-              transition-colors
-              hover:text-mauve
+              flex
+              h-9
+              w-9
+
+              items-center
+              justify-center
+
+              rounded-full
+
+              border
+              border-white/[0.06]
+
+              bg-black/20
+
+              transition-all
+
+              hover:border-white/20
+              hover:bg-white/[0.05]
+              hover:text-white
+
+              md:h-auto
+              md:w-auto
+              md:border-0
+              md:bg-transparent
             "
           >
             <FiGithub />
@@ -451,8 +720,30 @@ export default function Hero() {
             rel="noopener noreferrer"
             aria-label="LinkedIn"
             className="
-              transition-colors
-              hover:text-mauve
+              flex
+              h-9
+              w-9
+
+              items-center
+              justify-center
+
+              rounded-full
+
+              border
+              border-white/[0.06]
+
+              bg-black/20
+
+              transition-all
+
+              hover:border-white/20
+              hover:bg-white/[0.05]
+              hover:text-white
+
+              md:h-auto
+              md:w-auto
+              md:border-0
+              md:bg-transparent
             "
           >
             <FiLinkedin />
@@ -468,8 +759,30 @@ export default function Hero() {
             rel="noopener noreferrer"
             aria-label="Twitter / X"
             className="
-              transition-colors
-              hover:text-mauve
+              flex
+              h-9
+              w-9
+
+              items-center
+              justify-center
+
+              rounded-full
+
+              border
+              border-white/[0.06]
+
+              bg-black/20
+
+              transition-all
+
+              hover:border-white/20
+              hover:bg-white/[0.05]
+              hover:text-white
+
+              md:h-auto
+              md:w-auto
+              md:border-0
+              md:bg-transparent
             "
           >
             <FiTwitter />
@@ -478,7 +791,7 @@ export default function Hero() {
       </div>
 
       {/* =====================================================
-          SCROLL ARROW
+          SCROLL INDICATOR
       ===================================================== */}
 
       <motion.a
@@ -487,7 +800,7 @@ export default function Hero() {
         animate={{
           y: [
             0,
-            10,
+            8,
             0,
           ],
         }}
@@ -505,13 +818,44 @@ export default function Hero() {
           pointer-events-auto
 
           absolute
-          bottom-10
+
+          bottom-6
+          left-1/2
+
           z-30
 
-          text-2xl
-          text-white/40
+          flex
+          h-9
+          w-9
 
-          hover:text-mauve
+          -translate-x-1/2
+
+          items-center
+          justify-center
+
+          rounded-full
+
+          border
+          border-white/[0.08]
+
+          bg-black/20
+
+          text-base
+          text-white/35
+
+          backdrop-blur-md
+
+          transition-colors
+
+          hover:text-white
+
+          md:bottom-10
+          md:h-auto
+          md:w-auto
+          md:border-0
+          md:bg-transparent
+          md:text-2xl
+          md:backdrop-blur-none
         "
       >
         <FiArrowDown />
