@@ -42,41 +42,7 @@ export default function Hero() {
       onMouseLeave={handleMouseLeave}
       ref={containerRef}
     >
-      <span className="eyebrow mb-10 inline-block rounded-sm border border-mauve/30 px-4 py-1.5 font-mono">
-        available for freelance &amp; full-time
-      </span>
-
-      {/* Name: rises from below the viewport, settles centered, each
-          letter floats independently and the whole block tilts with the
-          mouse. */}
-      <motion.div
-        style={{ rotateX, rotateY, perspective: 800 }}
-        className="mx-auto flex flex-wrap justify-center"
-      >
-        {letters.map((letter, i) => (
-          <motion.span
-            key={i}
-            initial={{ y: 160, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{
-              duration: 1,
-              delay: 0.4 + i * 0.05,
-              ease: [0.16, 1, 0.3, 1],
-            }}
-            className="inline-block"
-          >
-            <span
-              className="inline-block animate-float font-pixel text-3xl text-white drop-shadow-[0_0_12px_rgba(166,77,121,0.6)] sm:text-4xl md:text-5xl"
-              style={{
-                animationDelay: `${i * 0.15}s`,
-                whiteSpace: letter === " " ? "pre" : "normal",
-              }}
-            >
-              {letter}
-            </span>
-          </motion.span>
-        ))}
-      </motion.div>
+      
 
       <motion.p
         initial={{ opacity: 0, y: 16 }}
