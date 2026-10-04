@@ -1,29 +1,22 @@
 "use client";
 
-import {
-  useRef,
-  useState,
-} from "react";
+import { useRef } from "react";
 
 import {
-  AnimatePresence,
   motion,
   useScroll,
   useSpring,
   useTransform,
 } from "framer-motion";
 
-import {
-  FiAward,
-  FiExternalLink,
-  FiX,
-} from "react-icons/fi";
-
 import SectionHeading from "./SectionHeading";
+import InfiniteMenu from "./InfiniteMenu";
 
-import {
-  certificates,
-} from "@/data/portfolio";
+import { certificates } from "@/data/portfolio";
+
+/* =========================================================
+   CERTIFICATE TYPE
+========================================================= */
 
 type Certificate =
   (typeof certificates)[number];
@@ -37,48 +30,58 @@ type DisplayCertificate =
 /* =========================================================
    CERTIFICATE IMAGES
 
-   Put your certificate screenshots here:
-
    public/
    └── certificates/
-       ├── cert-1.png
-       ├── cert-2.png
-       └── cert-3.png
+       ├── cert-1.jpg
+       ├── cert-2.jpg
+       ├── cert-3.jpg
+       └── ...
 ========================================================= */
 
 const certificateItems: DisplayCertificate[] =
   certificates.map(
-    (certificate, index) => ({
+    (
+      certificate,
+      index
+    ) => ({
       ...certificate,
 
       image:
-        `/certificates/cert-${index + 1}.png`,
+        `/certificates/cert-${index + 1}.jpg`,
 
-      number: String(
-        index + 1
-      ).padStart(
-        2,
-        "0"
-      ),
+      number:
+        String(
+          index + 1
+        ).padStart(
+          2,
+          "0"
+        ),
     })
   );
 
 /* =========================================================
-   REPEAT ITEMS
-
-   There are only a few certificates right now,
-   so we repeat them to create a long horizontal gallery.
+   INFINITE MENU ITEMS
 ========================================================= */
 
-const topRow = [
-  ...certificateItems,
-  ...certificateItems,
-];
+const menuItems =
+  certificateItems.map(
+    certificate => ({
+      image:
+        certificate.image,
 
-const bottomRow = [
-  ...[...certificateItems].reverse(),
-  ...[...certificateItems].reverse(),
-];
+      link:
+        certificate.url &&
+        certificate.url !== "#"
+          ? certificate.url
+          : "",
+
+      title:
+        certificate.title,
+
+      description:
+        `${certificate.issuer} • ${certificate.year}`,
+    })
+  );
 
 /* =========================================================
    CERTIFICATES
@@ -90,16 +93,12 @@ export default function Certificates() {
       null
     );
 
-  const [
-    selected,
-    setSelected,
-  ] =
-    useState<DisplayCertificate | null>(
-      null
-    );
-
   /* =======================================================
-     SCROLL
+     SCROLL PROGRESS
+
+     0.00 = section is entering from below
+     0.50 = section is centered in viewport
+     1.00 = section is leaving above
   ======================================================= */
 
   const {
@@ -114,1058 +113,897 @@ export default function Certificates() {
     ],
   });
 
-  /*
-   * Smooths the movement.
-   *
-   * Lower stiffness = slower / smoother.
-   * This is intentionally medium speed.
-   */
-
+  /* Smooth the scroll-linked animation. */
   const smoothProgress =
     useSpring(
       scrollYProgress,
       {
-        stiffness: 65,
-        damping: 24,
-        mass: 0.85,
+        stiffness: 85,
+        damping: 25,
+        mass: 0.7,
       }
     );
 
   /* =======================================================
-     TOP ROW → LEFT
+     SPHERE / GALLERY ENTER + EXIT
   ======================================================= */
 
-  const topX =
+  const sphereOpacity =
     useTransform(
       smoothProgress,
-      [0, 1],
-
       [
-        "8%",
-        "-32%",
+        0,
+        0.12,
+        0.82,
+        1,
+      ],
+      [
+        0,
+        1,
+        1,
+        0,
+      ]
+    );
+
+  const sphereScale =
+    useTransform(
+      smoothProgress,
+      [
+        0,
+        0.16,
+        0.82,
+        1,
+      ],
+      [
+        0.82,
+        1,
+        1,
+        0.9,
+      ]
+    );
+
+  const sphereY =
+    useTransform(
+      smoothProgress,
+      [
+        0,
+        0.16,
+        0.82,
+        1,
+      ],
+      [
+        110,
+        0,
+        0,
+        -110,
       ]
     );
 
   /* =======================================================
-     BOTTOM ROW → RIGHT
+     HEADING ENTER + EXIT
   ======================================================= */
 
-  const bottomX =
+  const headingOpacity =
     useTransform(
       smoothProgress,
-      [0, 1],
-
       [
-        "-32%",
-        "8%",
+        0.04,
+        0.16,
+        0.78,
+        0.92,
+      ],
+      [
+        0,
+        1,
+        1,
+        0,
       ]
     );
-
-  /* =======================================================
-     SMALL PARALLAX
-  ======================================================= */
 
   const headingY =
     useTransform(
       smoothProgress,
-      [0, 1],
-
-      [35, -35]
+      [
+        0,
+        0.18,
+        0.78,
+        1,
+      ],
+      [
+        55,
+        0,
+        0,
+        -55,
+      ]
     );
 
-  const glowX =
+  /* =======================================================
+     SIDE LABELS
+  ======================================================= */
+
+  const sideOpacity =
     useTransform(
       smoothProgress,
-      [0, 1],
+      [
+        0.08,
+        0.2,
+        0.78,
+        0.9,
+      ],
+      [
+        0,
+        1,
+        1,
+        0,
+      ]
+    );
 
-      [-80, 80]
+  const leftLabelX =
+    useTransform(
+      smoothProgress,
+      [
+        0,
+        0.2,
+        0.8,
+        1,
+      ],
+      [
+        -35,
+        0,
+        0,
+        -35,
+      ]
+    );
+
+  const rightLabelX =
+    useTransform(
+      smoothProgress,
+      [
+        0,
+        0.2,
+        0.8,
+        1,
+      ],
+      [
+        35,
+        0,
+        0,
+        35,
+      ]
+    );
+
+  /* =======================================================
+     BOTTOM HELPER
+  ======================================================= */
+
+  const helperOpacity =
+    useTransform(
+      smoothProgress,
+      [
+        0.12,
+        0.24,
+        0.74,
+        0.88,
+      ],
+      [
+        0,
+        1,
+        1,
+        0,
+      ]
+    );
+
+  const helperY =
+    useTransform(
+      smoothProgress,
+      [
+        0,
+        0.24,
+        0.76,
+        1,
+      ],
+      [
+        25,
+        0,
+        0,
+        25,
+      ]
+    );
+
+  /* =======================================================
+     BACKGROUND GLOW
+  ======================================================= */
+
+  const glowOpacity =
+    useTransform(
+      smoothProgress,
+      [
+        0,
+        0.18,
+        0.82,
+        1,
+      ],
+      [
+        0,
+        1,
+        1,
+        0,
+      ]
+    );
+
+  const glowScale =
+    useTransform(
+      smoothProgress,
+      [
+        0,
+        0.22,
+        0.8,
+        1,
+      ],
+      [
+        0.75,
+        1,
+        1,
+        1.2,
+      ]
+    );
+
+  /* =======================================================
+     CIRCLE REVEAL / HIDE
+
+     ENTER:
+     small circle -> expands to reveal whole section
+
+     EXIT:
+     full section -> closes back into a circle
+  ======================================================= */
+
+  const circleClip =
+    useTransform(
+      smoothProgress,
+      [
+        0,
+        0.18,
+        0.82,
+        1,
+      ],
+      [
+        "circle(0% at 50% 50%)",
+        "circle(150% at 50% 50%)",
+        "circle(150% at 50% 50%)",
+        "circle(0% at 50% 50%)",
+      ]
+    );
+
+  const ringScale =
+    useTransform(
+      smoothProgress,
+      [
+        0,
+        0.18,
+        0.82,
+        1,
+      ],
+      [
+        0.25,
+        3.7,
+        3.7,
+        0.25,
+      ]
+    );
+
+  const ringOpacity =
+    useTransform(
+      smoothProgress,
+      [
+        0,
+        0.07,
+        0.22,
+        0.78,
+        0.93,
+        1,
+      ],
+      [
+        0,
+        0.75,
+        0.15,
+        0.15,
+        0.75,
+        0,
+      ]
     );
 
   return (
-    <>
-      <section
-        ref={
-          sectionRef
-        }
-        id="certificates"
-        className="
-          relative
-          h-[185vh]
-          sm:h-[200vh]
-          lg:h-[215vh]
-        "
-      >
-        {/* =================================================
-            STICKY SCREEN
-        ================================================= */}
-
-        <div
-          className="
-            sticky
-            top-0
-
-            flex
-            min-h-screen
-            w-full
-            flex-col
-            justify-center
-
-            overflow-hidden
-
-            py-20
-            sm:py-24
-          "
-        >
-          {/* ===============================================
-              BACKGROUND GLOW
-          =============================================== */}
-
-          <motion.div
-            style={{
-              x: glowX,
-            }}
-            className="
-              pointer-events-none
-
-              absolute
-              left-1/2
-              top-1/2
-
-              h-[550px]
-              w-[750px]
-
-              -translate-x-1/2
-              -translate-y-1/2
-
-              rounded-full
-
-              bg-[#8f4d91]/10
-
-              blur-[150px]
-            "
-          />
-
-          {/* ===============================================
-              TOP GLOW
-          =============================================== */}
-
-          <div
-            className="
-              pointer-events-none
-
-              absolute
-              left-[10%]
-              top-[10%]
-
-              h-[260px]
-              w-[260px]
-
-              rounded-full
-
-              bg-purple-500/[0.07]
-
-              blur-[100px]
-            "
-          />
-
-          {/* ===============================================
-              HEADING
-          =============================================== */}
-
-          <motion.div
-            style={{
-              y: headingY,
-            }}
-            className="
-              relative
-              z-20
-
-              mx-auto
-              mb-10
-
-              w-full
-              max-w-6xl
-
-              px-6
-
-              sm:mb-12
-            "
-          >
-            <SectionHeading
-              eyebrow="Certificates"
-              title="Credentials & courses"
-            />
-
-            <p
-              className="
-                mx-auto
-                -mt-5
-                max-w-xl
-
-                text-center
-
-                font-mono
-                text-[9px]
-                uppercase
-                tracking-[0.25em]
-
-                text-white/30
-
-                sm:text-[10px]
-              "
-            >
-            </p>
-          </motion.div>
-
-          {/* =================================================
-              TOP ROW — MOVES LEFT
-          ================================================= */}
-
-          <div
-            className="
-              relative
-              z-10
-
-              mb-4
-
-              w-full
-
-              overflow-visible
-
-              sm:mb-6
-            "
-          >
-            <motion.div
-              style={{
-                x: topX,
-              }}
-              className="
-                flex
-                w-max
-
-                items-stretch
-
-                gap-3
-
-                will-change-transform
-
-                sm:gap-5
-                lg:gap-6
-              "
-            >
-              {topRow.map(
-                (
-                  cert,
-                  index
-                ) => (
-                  <CertificateCard
-                    key={`top-${cert.title}-${index}`}
-                    cert={
-                      cert
-                    }
-                    row="top"
-                    onClick={() =>
-                      setSelected(
-                        cert
-                      )
-                    }
-                  />
-                )
-              )}
-            </motion.div>
-          </div>
-
-          {/* =================================================
-              BOTTOM ROW — MOVES RIGHT
-          ================================================= */}
-
-          <div
-            className="
-              relative
-              z-10
-
-              w-full
-
-              overflow-visible
-            "
-          >
-            <motion.div
-              style={{
-                x: bottomX,
-              }}
-              className="
-                flex
-                w-max
-
-                items-stretch
-
-                gap-3
-
-                will-change-transform
-
-                sm:gap-5
-                lg:gap-6
-              "
-            >
-              {bottomRow.map(
-                (
-                  cert,
-                  index
-                ) => (
-                  <CertificateCard
-                    key={`bottom-${cert.title}-${index}`}
-                    cert={
-                      cert
-                    }
-                    row="bottom"
-                    onClick={() =>
-                      setSelected(
-                        cert
-                      )
-                    }
-                  />
-                )
-              )}
-            </motion.div>
-          </div>
-
-          {/* ===============================================
-              SIDE FADES
-          =============================================== */}
-
-          <div
-            className="
-              pointer-events-none
-
-              absolute
-              inset-y-0
-              left-0
-
-              z-20
-
-              w-[6vw]
-
-              bg-gradient-to-r
-
-              from-[#08050f]
-              to-transparent
-
-              sm:w-[10vw]
-            "
-          />
-
-          <div
-            className="
-              pointer-events-none
-
-              absolute
-              inset-y-0
-              right-0
-
-              z-20
-
-              w-[6vw]
-
-              bg-gradient-to-l
-
-              from-[#08050f]
-              to-transparent
-
-              sm:w-[10vw]
-            "
-          />
-
-          {/* ===============================================
-              SCROLL INDICATOR
-          =============================================== */}
-
-          <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            whileInView={{
-              opacity: 1,
-            }}
-            viewport={{
-              once: false,
-            }}
-            className="
-              pointer-events-none
-
-              absolute
-              bottom-8
-              left-1/2
-
-              z-30
-
-              -translate-x-1/2
-
-              font-mono
-
-              text-[8px]
-
-              uppercase
-
-              tracking-[0.28em]
-
-              text-white/20
-            "
-          >
-            scroll
-            &nbsp;↓
-          </motion.div>
-        </div>
-      </section>
-
-      {/* =================================================
-          MODAL
-      ================================================= */}
-
-      <AnimatePresence>
-        {selected && (
-          <motion.div
-            initial={{
-              opacity: 0,
-            }}
-            animate={{
-              opacity: 1,
-            }}
-            exit={{
-              opacity: 0,
-            }}
-            onClick={() =>
-              setSelected(
-                null
-              )
-            }
-            className="
-              fixed
-              inset-0
-
-              z-[100]
-
-              flex
-              items-center
-              justify-center
-
-              bg-[#08050f]/90
-
-              p-4
-
-              backdrop-blur-xl
-
-              sm:p-8
-            "
-          >
-            <motion.div
-              initial={{
-                opacity: 0,
-                scale: 0.88,
-                y: 35,
-              }}
-              animate={{
-                opacity: 1,
-                scale: 1,
-                y: 0,
-              }}
-              exit={{
-                opacity: 0,
-                scale: 0.9,
-                y: 25,
-              }}
-              transition={{
-                type:
-                  "spring",
-
-                stiffness:
-                  220,
-
-                damping:
-                  22,
-              }}
-              onClick={(
-                event
-              ) =>
-                event.stopPropagation()
-              }
-              className="
-                relative
-
-                w-full
-                max-w-3xl
-
-                overflow-hidden
-
-                rounded-2xl
-
-                border
-                border-white/10
-
-                bg-[#100b18]
-
-                shadow-[0_40px_120px_rgba(0,0,0,.7)]
-              "
-            >
-              {/* CLOSE */}
-
-              <button
-                onClick={() =>
-                  setSelected(
-                    null
-                  )
-                }
-                aria-label="Close"
-                className="
-                  absolute
-                  right-4
-                  top-4
-
-                  z-30
-
-                  flex
-                  h-9
-                  w-9
-
-                  items-center
-                  justify-center
-
-                  rounded-full
-
-                  border
-                  border-white/10
-
-                  bg-black/40
-
-                  text-white/60
-
-                  backdrop-blur-md
-
-                  transition
-
-                  hover:bg-white/10
-                  hover:text-white
-                "
-              >
-                <FiX />
-              </button>
-
-              {/* CERTIFICATE IMAGE */}
-
-              <div
-                className="
-                  relative
-
-                  aspect-[16/10]
-
-                  w-full
-
-                  overflow-hidden
-
-                  bg-[#0c0811]
-                "
-              >
-                <img
-                  src={
-                    selected.image
-                  }
-                  alt={
-                    selected.title
-                  }
-                  className="
-                    h-full
-                    w-full
-
-                    object-contain
-
-                    p-3
-
-                    sm:p-6
-                  "
-                />
-
-                <div
-                  className="
-                    pointer-events-none
-
-                    absolute
-                    inset-0
-
-                    bg-gradient-to-t
-
-                    from-[#100b18]
-                    via-transparent
-                    to-transparent
-                  "
-                />
-              </div>
-
-              {/* DETAILS */}
-
-              <div
-                className="
-                  relative
-
-                  p-6
-
-                  sm:p-8
-                "
-              >
-                <div
-                  className="
-                    flex
-                    items-start
-                    gap-4
-                  "
-                >
-                  <span
-                    className="
-                      flex
-                      h-11
-                      w-11
-
-                      shrink-0
-
-                      items-center
-                      justify-center
-
-                      rounded-xl
-
-                      bg-gradient-to-br
-
-                      from-violet
-                      to-mauve
-
-                      text-xl
-                      text-white
-                    "
-                  >
-                    <FiAward />
-                  </span>
-
-                  <div>
-                    <h3
-                      className="
-                        font-display
-
-                        text-lg
-                        font-semibold
-
-                        text-white
-
-                        sm:text-2xl
-                      "
-                    >
-                      {
-                        selected.title
-                      }
-                    </h3>
-
-                    <p
-                      className="
-                        mt-2
-
-                        font-mono
-
-                        text-[10px]
-
-                        uppercase
-
-                        tracking-[0.18em]
-
-                        text-white/40
-                      "
-                    >
-                      {
-                        selected.issuer
-                      }
-
-                      {" • "}
-
-                      {
-                        selected.year
-                      }
-                    </p>
-                  </div>
-                </div>
-
-                <a
-                  href={
-                    selected.url
-                  }
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="
-                    mt-7
-
-                    inline-flex
-
-                    items-center
-                    gap-2
-
-                    rounded-full
-
-                    border
-                    border-mauve/50
-
-                    bg-mauve/10
-
-                    px-5
-                    py-2.5
-
-                    font-mono
-
-                    text-[10px]
-
-                    uppercase
-
-                    tracking-[0.15em]
-
-                    text-white
-
-                    transition
-
-                    hover:bg-mauve/25
-                  "
-                >
-                  <FiExternalLink />
-
-                  View credential
-                </a>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-}
-
-/* =========================================================
-   CERTIFICATE CARD
-========================================================= */
-
-function CertificateCard({
-  cert,
-  row,
-  onClick,
-}: {
-  cert: DisplayCertificate;
-
-  row:
-    | "top"
-    | "bottom";
-
-  onClick: () => void;
-}) {
-  return (
-    <motion.button
-      type="button"
-      onClick={
-        onClick
+    <section
+      ref={
+        sectionRef
       }
-      whileHover={{
-        y: -7,
-        scale: 1.015,
-      }}
-      whileTap={{
-        scale: 0.985,
-      }}
-      transition={{
-        duration: 0.25,
-      }}
+      id="certificates"
       className="
-        group
         relative
+        isolate
+        z-10
 
-        h-[175px]
-        w-[260px]
-
-        shrink-0
+        h-[100svh]
+        min-h-[720px]
+        w-full
 
         overflow-hidden
 
-        rounded-xl
-
-        border
-        border-white/[0.09]
-
-        bg-[#100b18]
-
-        text-left
-
-        shadow-[0_18px_45px_rgba(0,0,0,.35)]
-
-        sm:h-[210px]
-        sm:w-[330px]
-
-        md:h-[225px]
-        md:w-[360px]
-
-        lg:h-[240px]
-        lg:w-[390px]
-
-        xl:h-[250px]
-        xl:w-[420px]
+        bg-transparent
       "
     >
-      {/* ===============================================
-          IMAGE
-      =============================================== */}
+      {/* =================================================
+          CIRCULAR IN / OUT REVEAL
+      ================================================= */}
 
-      <div
+      <motion.div
+        style={{
+          clipPath:
+            circleClip,
+          WebkitClipPath:
+            circleClip,
+        }}
         className="
           absolute
           inset-0
+
+          h-full
+          w-full
 
           overflow-hidden
 
-          bg-gradient-to-br
+          bg-[#050506]
 
-          from-[#21152d]
-          via-[#120c19]
-          to-[#08050d]
+          will-change-[clip-path]
         "
       >
-        <img
-          src={
-            cert.image
-          }
-          alt=""
-          draggable={
-            false
-          }
-          className="
-            h-full
-            w-full
-
-            object-cover
-
-            opacity-80
-
-            transition
-
-            duration-700
-
-            group-hover:scale-105
-            group-hover:opacity-100
-          "
-        />
-      </div>
-
-      {/* DARK OVERLAY */}
+      {/* =================================================
+          BACKGROUND
+      ================================================= */}
 
       <div
-        className="
-          absolute
-          inset-0
-
-          bg-gradient-to-t
-
-          from-black/90
-          via-black/20
-          to-black/5
-        "
-      />
-
-      {/* PURPLE GLOW */}
-
-      <div
+        aria-hidden="true"
         className="
           pointer-events-none
 
           absolute
-          -right-16
-          -top-16
+          inset-0
+          -z-20
 
-          h-40
-          w-40
-
-          rounded-full
-
-          bg-mauve/20
-
-          blur-[60px]
-
-          opacity-0
-
-          transition-opacity
-
-          duration-500
-
-          group-hover:opacity-100
+          bg-[#050506]
         "
       />
 
-      {/* ===============================================
-          NUMBER
-      =============================================== */}
+      {/* =================================================
+          CENTER VIOLET ATMOSPHERE
+      ================================================= */}
 
-      <span
+      <motion.div
+        aria-hidden="true"
+        style={{
+          opacity:
+            glowOpacity,
+
+          scale:
+            glowScale,
+        }}
         className="
+          pointer-events-none
+
           absolute
-          left-4
-          top-4
+          left-1/2
+          top-1/2
+          -z-10
 
-          font-mono
+          h-[65vw]
+          max-h-[900px]
+          min-h-[500px]
 
-          text-[8px]
+          w-[65vw]
+          max-w-[900px]
+          min-w-[500px]
 
-          uppercase
+          -translate-x-1/2
+          -translate-y-1/2
 
-          tracking-[0.3em]
+          rounded-full
 
-          text-white/40
+          bg-[#3b2558]/[0.08]
+
+          blur-[180px]
+
+          will-change-transform
         "
-      >
-        {
-          cert.number
-        }
-      </span>
+      />
 
-      {/* DIRECTION LABEL */}
+      {/* =================================================
+          SECONDARY GLOWS
+      ================================================= */}
 
-      <span
+      <motion.div
+        aria-hidden="true"
+        style={{
+          opacity:
+            glowOpacity,
+        }}
         className="
+          pointer-events-none
+
           absolute
-          right-4
-          top-4
+          -left-[150px]
+          top-[30%]
+          -z-10
 
-          font-mono
+          h-[450px]
+          w-[450px]
 
-          text-[8px]
+          rounded-full
 
-          uppercase
+          bg-white/[0.018]
 
-          tracking-[0.18em]
-
-          text-white/25
+          blur-[150px]
         "
-      >
-        {row ===
-        "top"
-          ? "←"
-          : "→"}
-      </span>
+      />
 
-      {/* ===============================================
-          DETAILS
-      =============================================== */}
+      <motion.div
+        aria-hidden="true"
+        style={{
+          opacity:
+            glowOpacity,
+        }}
+        className="
+          pointer-events-none
 
-      <div
+          absolute
+          -right-[160px]
+          bottom-[10%]
+          -z-10
+
+          h-[500px]
+          w-[500px]
+
+          rounded-full
+
+          bg-[#3b2558]/[0.05]
+
+          blur-[160px]
+        "
+      />
+
+      {/* =================================================
+          CIRCLE EDGE / PORTAL RING
+
+          This makes the circular reveal visible even on
+          an already-dark page.
+      ================================================= */}
+
+      <motion.div
+        aria-hidden="true"
+        style={{
+          scale:
+            ringScale,
+
+          opacity:
+            ringOpacity,
+        }}
+        className="
+          pointer-events-none
+
+          absolute
+          left-1/2
+          top-1/2
+          z-[9]
+
+          h-[34vmin]
+          w-[34vmin]
+
+          -translate-x-1/2
+          -translate-y-1/2
+
+          rounded-full
+
+          border
+          border-white/15
+
+          shadow-[0_0_35px_rgba(255,255,255,0.06),0_0_90px_rgba(59,37,88,0.22),inset_0_0_50px_rgba(117,82,158,0.06)]
+
+          will-change-transform
+        "
+      />
+
+      <motion.div
+        aria-hidden="true"
+        style={{
+          scale:
+            ringScale,
+
+          opacity:
+            ringOpacity,
+        }}
+        className="
+          pointer-events-none
+
+          absolute
+          left-1/2
+          top-1/2
+          z-[8]
+
+          h-[30vmin]
+          w-[30vmin]
+
+          -translate-x-1/2
+          -translate-y-1/2
+
+          rounded-full
+
+          border
+          border-[#75529e]/20
+
+          blur-[0.2px]
+
+          will-change-transform
+        "
+      />
+
+      {/* =================================================
+          FULL-SCREEN SPHERE
+
+          ENTER:
+          moves upward + grows + fades in
+
+          EXIT:
+          moves upward + shrinks + fades out
+      ================================================= */}
+
+      <motion.div
+        style={{
+          opacity:
+            sphereOpacity,
+
+          scale:
+            sphereScale,
+
+          y:
+            sphereY,
+        }}
         className="
           absolute
-          inset-x-0
-          bottom-0
-
+          inset-0
           z-10
 
-          p-4
+          h-full
+          w-full
 
-          sm:p-5
+          origin-center
+
+          will-change-transform
+        "
+      >
+        <InfiniteMenu
+          items={
+            menuItems
+          }
+          scale={1.08}
+          imageFit="contain"
+          backgroundColor="#050506"
+        />
+      </motion.div>
+
+      {/* =================================================
+          HEADING
+      ================================================= */}
+
+      <motion.div
+        style={{
+          opacity:
+            headingOpacity,
+
+          y:
+            headingY,
+        }}
+        className="
+          pointer-events-none
+
+          absolute
+          inset-x-0
+          top-0
+          z-30
+
+          px-5
+          pt-20
+
+          sm:px-8
+          sm:pt-24
+
+          md:px-10
+
+          lg:px-14
+
+          will-change-transform
         "
       >
         <div
           className="
-            mb-2
-
-            flex
-            items-center
-            gap-2
+            mx-auto
+            w-full
+            max-w-7xl
           "
         >
-          <FiAward
-            className="
-              text-mauve
-            "
+          <SectionHeading
+            eyebrow="Certificates"
+            title="Credentials & courses"
           />
 
-          <span
+          <p
             className="
-              font-mono
+              mx-auto
+              -mt-3
 
+              max-w-xl
+
+              text-center
+
+              font-mono
               text-[8px]
 
               uppercase
+              tracking-[0.22em]
 
-              tracking-[0.2em]
+              text-white/30
 
-              text-mauve
+              sm:text-[9px]
+
+              md:text-[10px]
             "
           >
-            {
-              cert.year
-            }
-          </span>
+            Drag to explore my certificates
+          </p>
         </div>
+      </motion.div>
 
-        <h3
-          className="
-            max-w-[90%]
+      {/* =================================================
+          ARCHIVE LABEL
+      ================================================= */}
 
-            font-display
+      <motion.div
+        style={{
+          opacity:
+            sideOpacity,
 
-            text-sm
-
-            font-semibold
-
-            leading-snug
-
-            text-white
-
-            sm:text-base
-          "
-        >
-          {
-            cert.title
-          }
-        </h3>
-
-        <p
-          className="
-            mt-2
-
-            font-mono
-
-            text-[8px]
-
-            uppercase
-
-            tracking-[0.15em]
-
-            text-white/40
-
-            sm:text-[9px]
-          "
-        >
-          {
-            cert.issuer
-          }
-        </p>
-      </div>
-
-      {/* BORDER HIGHLIGHT */}
-
-      <div
+          x:
+            leftLabelX,
+        }}
         className="
           pointer-events-none
 
           absolute
-          inset-0
+          left-5
+          top-[190px]
+          z-30
 
-          rounded-xl
+          hidden
+
+          items-center
+          gap-2
+
+          font-mono
+          text-[8px]
+
+          uppercase
+          tracking-[0.22em]
+
+          text-white/20
+
+          md:flex
+
+          lg:left-10
+
+          will-change-transform
+        "
+      >
+        <span
+          className="
+            h-1.5
+            w-1.5
+
+            rounded-full
+
+            bg-[#75529e]
+
+            shadow-[0_0_12px_rgba(117,82,158,0.6)]
+          "
+        />
+
+        Interactive archive
+      </motion.div>
+
+      {/* =================================================
+          CERTIFICATE COUNTER
+      ================================================= */}
+
+      <motion.div
+        style={{
+          opacity:
+            sideOpacity,
+
+          x:
+            rightLabelX,
+        }}
+        className="
+          pointer-events-none
+
+          absolute
+          right-5
+          top-[190px]
+          z-30
+
+          hidden
+
+          font-mono
+          text-[8px]
+
+          uppercase
+          tracking-[0.2em]
+
+          text-white/20
+
+          md:block
+
+          lg:right-10
+
+          will-change-transform
+        "
+      >
+        {String(
+          certificateItems.length
+        ).padStart(
+          2,
+          "0"
+        )}{" "}
+        certificates
+      </motion.div>
+
+      {/* =================================================
+          BOTTOM HELP
+      ================================================= */}
+
+      <motion.div
+        style={{
+          opacity:
+            helperOpacity,
+
+          y:
+            helperY,
+        }}
+        className="
+          pointer-events-none
+
+          absolute
+          bottom-5
+          left-1/2
+          z-30
+
+          -translate-x-1/2
+
+          whitespace-nowrap
+
+          rounded-full
 
           border
-          border-mauve/0
+          border-white/[0.08]
 
-          transition-all
+          bg-black/50
 
-          duration-300
+          px-4
+          py-2
 
-          group-hover:border-mauve/50
+          font-mono
+          text-[7px]
 
-          group-hover:shadow-[inset_0_0_25px_rgba(166,77,121,.08)]
+          uppercase
+          tracking-[0.18em]
+
+          text-white/35
+
+          shadow-[0_12px_40px_rgba(0,0,0,0.5)]
+
+          backdrop-blur-xl
+
+          sm:bottom-7
+          sm:px-5
+          sm:text-[8px]
+
+          will-change-transform
+        "
+      >
+        drag / swipe to rotate
+        &nbsp; • &nbsp;
+        click to preview
+      </motion.div>
+
+      {/* =================================================
+          TOP FADE
+      ================================================= */}
+
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+
+          absolute
+          inset-x-0
+          top-0
+          z-20
+
+          h-[190px]
+
+          bg-gradient-to-b
+          from-[#050506]
+          via-[#050506]/75
+          to-transparent
         "
       />
-    </motion.button>
+
+      {/* =================================================
+          BOTTOM FADE
+      ================================================= */}
+
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+
+          absolute
+          inset-x-0
+          bottom-0
+          z-20
+
+          h-[90px]
+
+          bg-gradient-to-t
+          from-[#050506]
+          via-[#050506]/50
+          to-transparent
+        "
+      />
+
+      {/* =================================================
+          EDGE LINES
+      ================================================= */}
+
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+
+          absolute
+          inset-x-0
+          top-0
+          z-30
+
+          h-px
+
+          bg-white/[0.05]
+        "
+      />
+
+      <div
+        aria-hidden="true"
+        className="
+          pointer-events-none
+
+          absolute
+          inset-x-0
+          bottom-0
+          z-30
+
+          h-px
+
+          bg-white/[0.05]
+        "
+      />
+      </motion.div>
+    </section>
   );
 }
